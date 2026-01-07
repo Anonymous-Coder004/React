@@ -6,6 +6,7 @@ import authService from './appwrite/auth'
 import { login,logout } from './store/authslice'
 import 'tailwindcss'
 import { Header,Footer } from './components'
+import { Outlet } from 'react-router-dom'
 function App() {
   const [loading,setloading]=useState(true)
   const dispatch=useDispatch()
@@ -14,7 +15,7 @@ function App() {
     authService.getCurrrentUser()
     .then((userData)=>{
       if(userData){
-        dispatch(login({userData}))
+        dispatch(login(userData))
       }
       else{
         dispatch(logout())
@@ -25,7 +26,9 @@ function App() {
     <div className='min-h-screen flex flex-wrap content-between bg-gray-400'>
       <div className='w-full block'>
         <Header />
-        <main>outlet</main>
+        <main>
+          <Outlet />
+        </main>
         <Footer />
       </div>
     </div>

@@ -1,5 +1,5 @@
 import conf from "../conf/conf";
-import { Client, ID,Storage,Query, TablesDB } from "appwrite";
+import { Client, ID,Storage,Query, TablesDB,Permission,Role } from "appwrite";
 export class Service{
     client=new Client();
     databases;
@@ -76,7 +76,7 @@ export class Service{
         }
     }
 
-    async getPosts(queries=[Query.equal('status','equal')]){
+    async getPosts(queries=[Query.equal('status','true')]){
         try {
             return await this.databases.listRows({
                 databaseId: conf.appwriteDatabaseId,
@@ -90,12 +90,13 @@ export class Service{
 
     async uploadFile(file){
         try {
-            await this.bucket.createFile({
-                bucketId: conf.appwriteBucketId,
-                fileId: ID.unique(),
-                file:file
-            })
-            return true;
+            return await this.bucket.createFile(
+                conf.appwriteBucketId,
+                ID.unique(),
+                file,
+                [Permission.read(Role.any())]
+            );
+            
         } catch (error) {
             console.log("Upload error",error)
             return false
@@ -115,15 +116,11 @@ export class Service{
         }
     }
 
-    async getFilePreview(fileId){
-        try {
-            return await thiss.bucket.getFilePreview({
+    getFilePreview(fileId){
+        return this.bucket.getFileView({
                 bucketId: conf.appwriteBucketId,
                 fileId: fileId,
-            })
-        } catch (error) {
-            console.log("file preview error",error)
-        }
+        })
     }
 
 

@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import appwriteService from "../appwrite/config"
+import { Container } from '../components'
+import { PostForm } from '../components'
 function EditPost() {
     const [post,setPosts]=useState(null)
     const {slug}=useParams() //for fetching data from dynamic url
